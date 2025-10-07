@@ -32,10 +32,10 @@ function MouseCamera({ isMobile }: { isMobile: boolean }) {
     targetRotationY.current = mouseX.current * maxAngleX
     targetRotationX.current = mouseY.current * maxAngleY
 
-    const radius = isMobile ? 10 : 5
+    const radius = isMobile ? 11 : 5
     const targetX = Math.sin(targetRotationY.current) * radius
     const targetZ = Math.cos(targetRotationY.current) * radius
-    const targetY = 1 + targetRotationX.current * 2
+    const targetY = 0.7 + targetRotationX.current * 2
 
     camera.position.x += (targetX - camera.position.x) * 0.05
     camera.position.y += (targetY - camera.position.y) * 0.05
@@ -66,7 +66,7 @@ export function Scene() {
     return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
-  const cameraPosition: [number, number, number] = isMobile ? [0, 1, 10] : [0, 1, 5]
+  const cameraPosition: [number, number, number] = isMobile ? [0, 0.7, 11] : [0, 1, 5]
 
   return (
     <div className="w-full h-screen">
