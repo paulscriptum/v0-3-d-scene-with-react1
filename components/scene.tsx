@@ -41,7 +41,7 @@ function MouseCamera({ isMobile }: { isMobile: boolean }) {
     camera.position.y += (targetY - camera.position.y) * 0.05
     camera.position.z += (targetZ - camera.position.z) * 0.05
 
-    camera.lookAt(0, isMobile ? -1 : 0, 0)
+    camera.lookAt(0, isMobile ? -0.5 : 0, 0)
   })
 
   if (typeof window !== "undefined") {
