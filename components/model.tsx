@@ -7,13 +7,26 @@ import { useFrame } from "@react-three/fiber"
 import { useRef } from "react"
 import type * as THREE from "three"
 
-function AnimatedMesh({ children, phase = 0 }: { children: React.ReactNode; phase?: number }) {
+function AnimatedMesh({
+  children,
+  phase = 0,
+  scrollProgress = 1,
+  isScrollAnimated = false,
+}: {
+  children: React.ReactNode
+  phase?: number
+  scrollProgress?: number
+  isScrollAnimated?: boolean
+}) {
   const meshRef = useRef<THREE.Group>(null)
 
   useFrame(({ clock }) => {
     if (meshRef.current) {
       const time = clock.getElapsedTime() + phase
-      meshRef.current.position.y = Math.sin(time * 0.4) * 0.08
+
+      const scrollOffset = isScrollAnimated ? (1 - scrollProgress) * 5 : 0
+
+      meshRef.current.position.y = Math.sin(time * 0.4) * 0.08 + scrollOffset
       meshRef.current.rotation.x = Math.sin(time * 0.35) * 0.04
       meshRef.current.rotation.z = Math.cos(time * 0.3) * 0.04
     }
@@ -22,11 +35,11 @@ function AnimatedMesh({ children, phase = 0 }: { children: React.ReactNode; phas
   return <group ref={meshRef}>{children}</group>
 }
 
-export function Model(props) {
+export function Model({ scrollProgress = 1, ...props }) {
   const { nodes, materials } = useGLTF("https://cdn.jsdelivr.net/gh/paulscriptum/model@main/FWA2.glb")
   return (
     <group {...props} dispose={null}>
-      <AnimatedMesh phase={0}>
+      <AnimatedMesh phase={0} scrollProgress={scrollProgress} isScrollAnimated>
         <mesh
           castShadow
           receiveShadow
@@ -89,7 +102,7 @@ export function Model(props) {
       />
       <mesh castShadow receiveShadow geometry={nodes.sign.geometry} material={nodes.sign.material} scale={0} />
 
-      <AnimatedMesh phase={1.5}>
+      <AnimatedMesh phase={1.5} scrollProgress={scrollProgress} isScrollAnimated>
         <mesh
           castShadow
           receiveShadow
@@ -101,7 +114,8 @@ export function Model(props) {
         />
       </AnimatedMesh>
 
-      <AnimatedMesh phase={3}>
+      {/* Added scroll animation to CELL001 */}
+      <AnimatedMesh phase={3} scrollProgress={scrollProgress} isScrollAnimated>
         <mesh
           castShadow
           receiveShadow
@@ -113,7 +127,8 @@ export function Model(props) {
         />
       </AnimatedMesh>
 
-      <AnimatedMesh phase={4.5}>
+      {/* Added scroll animation to LAPTOP001 */}
+      <AnimatedMesh phase={4.5} scrollProgress={scrollProgress} isScrollAnimated>
         <mesh
           castShadow
           receiveShadow
@@ -125,7 +140,7 @@ export function Model(props) {
         />
       </AnimatedMesh>
 
-      <AnimatedMesh phase={2}>
+      <AnimatedMesh phase={2} scrollProgress={scrollProgress} isScrollAnimated>
         <mesh
           castShadow
           receiveShadow
@@ -145,7 +160,7 @@ export function Model(props) {
         </mesh>
       </AnimatedMesh>
 
-      <AnimatedMesh phase={5.5}>
+      <AnimatedMesh phase={5.5} scrollProgress={scrollProgress} isScrollAnimated>
         <mesh
           castShadow
           receiveShadow
