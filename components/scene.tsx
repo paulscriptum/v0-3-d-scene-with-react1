@@ -52,7 +52,7 @@ function MouseCamera({ isMobile }: { isMobile: boolean }) {
   return null
 }
 
-export function Scene({ scrollProgress }: { scrollProgress: number }) {
+export function Scene({ isVisible }: { isVisible: boolean }) {
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
@@ -78,7 +78,7 @@ export function Scene({ scrollProgress }: { scrollProgress: number }) {
         <pointLight position={[-10, -10, -5]} intensity={0.5} />
 
         <Suspense fallback={null}>
-          <Model scrollProgress={scrollProgress} />
+          <Model isVisible={isVisible} />
           {!isMobile && <ContactShadows position={[0, -1.99, 0]} opacity={0.4} scale={20} blur={0.5} far={4} />}
         </Suspense>
 

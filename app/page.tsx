@@ -1,42 +1,41 @@
 "use client"
 
 import { Scene } from "@/components/scene"
-import { useState, useEffect } from "react"
+import { useEffect, useRef, useState } from "react"
 
 export default function Home() {
-  const [scrollProgress, setScrollProgress] = useState(0)
-  const [isMobile, setIsMobile] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+  const triggerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      {
+        threshold: 0.1,
+      },
+    )
+
+    if (triggerRef.current) {
+      observer.observe(triggerRef.current)
     }
 
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
-
-    return () => window.removeEventListener("resize", checkMobile)
+    return () => {
+      if (triggerRef.current) {
+        observer.unobserve(triggerRef.current)
+      }
+    }
   }, [])
 
-  useEffect(() => {
-    if (isMobile) return
-
-    const handleScroll = () => {
-      const scrollY = window.scrollY
-      const maxScroll = 500
-      const progress = Math.min(scrollY / maxScroll, 1)
-      setScrollProgress(progress)
-    }
-
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [isMobile])
-
   return (
-    <main className={`relative w-full ${isMobile ? "h-screen" : "h-[200vh]"}`}>
+    <main className="relative w-full min-h-[150vh]">
       <div className="fixed inset-0 pointer-events-none">
-        <Scene scrollProgress={isMobile ? 1 : scrollProgress} />
+        <Scene isVisible={isVisible} />
       </div>
+      <div ref={triggerRef} className="absolute top-[30vh] w-full h-px" />
     </main>
   )
 }
