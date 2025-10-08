@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <main className={`relative w-full ${isMobile ? "h-screen" : "h-[200vh]"}`}>
-      <div className="fixed inset-0">
+      <div className="fixed inset-0 pointer-events-none">
         <Scene scrollProgress={isMobile ? 1 : scrollProgress} />
       </div>
     </main>
